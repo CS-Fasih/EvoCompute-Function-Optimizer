@@ -1,6 +1,6 @@
 # EvoCompute-Function-Optimizer
 
-Evolutionary Algorithm (EA) implementation in Python for minimizing two benchmark functions and comparing selection scheme combinations.
+Evolutionary Algorithm (EA) implementation in Python for **maximizing** two benchmark functions and comparing 6 parent/survival selection combinations.
 
 ## Objective Functions
 
@@ -9,6 +9,10 @@ Evolutionary Algorithm (EA) implementation in Python for minimizing two benchmar
 
 2. **Function 2 (Rosenbrock-like)**  
    \(f(x, y) = 100(x^2 - y)^2 + (1 - x)^2\), with bounds: \(-2 \le x \le 2\), \(-1 \le y \le 3\)
+
+Expected maximization behavior:
+- Function 1 naturally approaches maximum fitness near **50**.
+- Function 2 naturally approaches maximum fitness near **2500+** within bounds.
 
 ## EA Configuration
 
@@ -34,16 +38,18 @@ Evolutionary Algorithm (EA) implementation in Python for minimizing two benchmar
 - **Best-so-far (BSF)** per generation
 - **Average-of-current-population (ACP)** per generation
 
-For each function and combination, the script averages BSF and ACP across 10 runs and exports CSV data for all 40 generations.
+For each function and combination, the script runs 10 runs and exports run-level tables for selected generations:
+
+`1, 5, 10, 15, 20, 25, 30, 35, 40`
 
 ---
 
 ## Project Structure
 
-- `ea_assignment.py` — EA implementation and experiment runner
-- `generate_plots.py` — plotting utility for presentation-ready figures
-- `results/` — aggregated CSV outputs
-- `plots/` — generated PNG plots
+- `ea_assignment.py` — full EA experiment runner + CSV export + plotting
+- `generate_plots.py` — legacy plotting utility (optional)
+- `results/` — run-level CSV outputs
+- `plots/` — generated PNG plots (individual + summary)
 
 ## Setup
 
@@ -61,38 +67,48 @@ python ea_assignment.py
 
 This generates:
 
-- `results/function_1_sphere_aggregated_results.csv`
-- `results/function_2_rosenbrock_aggregated_results.csv`
+For each function (`function_1_sphere`, `function_2_rosenbrock`) and each combination:
 
-## Generate Plots
+- `results/<function_name>/<combo_name>_Average_Avg_Fit.csv`
+- `results/<function_name>/<combo_name>_Average_Best_Fit.csv`
 
-```bash
-python generate_plots.py
-```
+where `<combo_name>` is one of:
 
-This generates high-resolution (300 DPI) PNG files in `plots/`:
+- `fps__truncation`
+- `rbs__truncation`
+- `binary_tournament__truncation`
+- `fps__binary_tournament`
+- `rbs__binary_tournament`
+- `binary_tournament__binary_tournament`
 
-- `function_1_sphere_average_bsf.png`
-- `function_1_sphere_average_avg_fit.png`
-- `function_2_rosenbrock_average_bsf.png`
-- `function_2_rosenbrock_average_avg_fit.png`
+The script also generates high-resolution PNG files in:
+
+- `plots/function_1_sphere/`
+- `plots/function_2_rosenbrock/`
+
+including individual-combination plots and two summary plots per function:
+- `summary_averages_of_all_combinations.png`
+- `summary_best_fit_of_all_combinations.png`
 
 ## CSV Schema
 
-Each row corresponds to one generation of one selection combination.
+Each exported run-level CSV has the schema:
 
-Columns:
-
-- `Function`
-- `Parent_Selection`
-- `Survival_Selection`
-- `Combination`
 - `Generation`
-- `Average_BSF`
-- `Average_Avg_Fit`
+- `Run 1`
+- `Run 2`
+- `Run 3`
+- `Run 4`
+- `Run 5`
+- `Run 6`
+- `Run 7`
+- `Run 8`
+- `Run 9`
+- `Run 10`
+- `Average` (row-wise mean of Run 1..Run 10)
 
 ## Notes
 
 - Core EA logic is implemented from scratch.
-- Only `numpy`, `pandas`, `random` are used for the EA core.
+- EA core uses only `numpy`, `pandas`, and `random`.
 - Plotting uses `matplotlib` + `seaborn`.
